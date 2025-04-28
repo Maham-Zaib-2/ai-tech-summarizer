@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Text Summarizer</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="container">
+    <h1>AI Text Summarizer</h1>
+    <textarea id="inputText" placeholder="Enter your text here..." rows="8"></textarea>
+    <button onclick="summarizeText()">Summarize Text</button>
+
+    <div class="output-section">
+      <h2>Summary:</h2>
+      <p id="summaryOutput"></p>
+    </div>
+  </div>
+
+  <script>
+    async function summarizeText() {
+      const text = document.getElementById('inputText').value;
+      
+      try {
+        const response = await fetch('/summarize', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ text: text })
+        });
+
+        const data = await response.json();
+        if (data.summary) {
+          document.getElementById('summaryOutput').innerText = data.summary;
+        } else {
+          document.getElementById('summaryOutput').innerText = 'Error: No summary found.';
+        }
+      } catch (error) {
+        console.error('Error:', error);
+        document.getElementById('summaryOutput').innerText = 'Error summarizing text.';
+      }
+    }
+  </script>
+</body>
+</html>
